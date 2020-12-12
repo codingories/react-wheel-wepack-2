@@ -111,3 +111,54 @@ yarn add @types/react-dom --dev
 4. 回头看package.json,发现react版本和@types/react及@types/react-dom不一致
 - 这是需要作为架构师需要关注的，如果哪天有bug可能就是这个原因引起
 - 面试问yarn.lock是做什么的，yarn.lock就是yarn.lock文件,锁的所有安装的东西的版本号,package.json说的是范围，.lock是具体
+
+5. 出现报错`ERROR in ./lib/index.tsx,Module not found: Error: Can't resolve './button' in '/Users/ories/Downloads/jirengu-demo/z-ui-react/lib' @ ./lib/index.tsx 3:0-30 4:36-42`
+- 通过配置webpack,resolve
+```
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+  },
+```
+
+6. 又出现`TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.`的错误
+- 原因是button.tsx中没有import react, 以下代码div其实是一段语法糖，
+```jsx
+function Button() {
+  return (
+    <div>
+      anniu
+    </div>
+  )
+}
+```
+- 可以把以上代码放到babel online运行就可以得到翻译后的代码
+```js
+"use strict";
+
+function Button() {
+  return /*#__PURE__*/React.createElement("div", null, "anniu");
+}
+```
+7. 解决控制台warning,WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+Entrypoints:index (276 KiB),index.js,因为开发模式下index把react也打包进去了
+  - 解决方法是把 mode改成 'development'
+
+8. 解决index过大的问题，用externals,也就是外部的库
+```
+ externals: {
+    react: {
+      commonjs: 'react', // var react = requrire...这种写法
+      commonjs2: 'react',
+      amd: 'react', 
+      root: 'React', // <script src='xxx/react.min.js'>,window.React 这种写法
+    },
+    'react-dom': {
+      commonjs: 'react-dom',
+      commonjs2: 'react-dom',
+      amd: 'react-dom',
+      root: 'ReactDOM',
+    }
+  }
+```
+
+9. 开发环境生产环境的区别
