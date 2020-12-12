@@ -87,3 +87,27 @@ module.exports = {
   ]
 }
 ```
+
+二. webpack环境搭建下
+1. 将代码上传到多个远程仓库
+- 添加另外一个名字的远程仓库git remote add zui-2 git@github.com:codingories/react-wheel-wepack-2.git
+- git push -u zui-2 main
+
+2. webpack.config.js中增加快捷命令
+```js
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server",
+    "build": "webpack"
+  }
+```
+3. 安装react,react-dom以及类型依赖
+```
+yarn add react-dom react
+yarn add @types/react --dev
+yarn add @types/react-dom --dev
+```
+
+4. 回头看package.json,发现react版本和@types/react及@types/react-dom不一致
+- 这是需要作为架构师需要关注的，如果哪天有bug可能就是这个原因引起
+- 面试问yarn.lock是做什么的，yarn.lock就是yarn.lock文件,锁的所有安装的东西的版本号,package.json说的是范围，.lock是具体
