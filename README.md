@@ -162,3 +162,79 @@ Entrypoints:index (276 KiB),index.js,因为开发模式下index把react也打包
 ```
 
 9. 开发环境生产环境的区别
+- 新建webpack.config.dev.js和webpack.config.prod.js，webpack.config.js作为共有的
+- webpack.config.js
+```js
+const path = require('path')
+
+module.exports = {
+  entry: {
+    index: './lib/index.tsx'
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist/lib'),
+    library: 'ZUI',
+    libraryTarget: 'umd'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        loader: 'awesome-typescript-loader'
+      }
+    ]
+  },
+}
+```
+- webpack.config.dev.js
+```js
+const base = require('./webpack.config.js')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+module.exports = Object.assign ({},base,{
+  mode: 'development',
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'ZUI',
+      template: 'index.html'
+    })
+  ],
+})
+```
+- webpack.config.prod.js
+```js
+const base = require('./webpack.config.js')
+
+module.exports = Object.assign ({},base,{
+    mode: 'production',
+    externals: {
+      react: {
+        commonjs: 'react',
+        commonjs2: 'react',
+        amd: 'react',
+        root: 'React',
+      },
+      'react-dom': {
+        commonjs: 'react-dom',
+        commonjs2: 'react-dom',
+        amd: 'react-dom',
+        root: 'ReactDOM',
+      }
+    }
+  }
+)
+```
+- 改package.json的启动配置
+```js
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --config webpack.config.dev.js",
+    "build": "webpack --config webpack.config.prod.js"
+  },
+```
+10. 配置TS类型生命文件
+- tsconfig.json加入`"outDir": "dist",`
+- 把index.d.ts移到dist/lib/index下面,在package.json加入`"types": "dist/lib/index",`
