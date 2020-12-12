@@ -25,6 +25,7 @@ module.exports = {
 - 由于历史遗留问题要用umd,其本质就是if-else
 ```js
 const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
   mode: 'production',
   entry: {
@@ -54,3 +55,35 @@ module.exports = {
 - webpack-dev-server作用是开一个server,比如找1.tsx，翻译成1.js放到内存，用户访问1.js直接抛出，放内存更快
 
 10. html-webpack-plugin
+- html-webpack-plugin,用来改写html的插件,webpack把最新的script加入index.html
+- 配置,webpack.config.js
+```js
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+module.exports = {
+  mode: 'production',
+  entry: {
+    index: './lib/index.tsx'
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist/lib'),
+    library: 'ZUI',
+    libraryTarget: 'umd'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        loader: 'awesome-typescript-loader'
+      }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'ZUI',
+      template: 'index.html'
+    })
+  ]
+}
+```
