@@ -291,3 +291,35 @@ module.exports = {
 //    "allowSyntheticDefaultImports": true, // 已经被弃用, ts-js不支持
     "esModuleInterop": true,
 ```
+三. 组件1-icon上
+1. 为什么要造轮子
+- 不要重复造轮子,但是要有造轮子的能力
+- 为了不求人,假设你使用了某个UI框架，但是发现有bug,于是你反馈给开发者，开发者说两周后修复，而你的项目一周后上线，怎么办？为什么很多大公司不使用其他公司的轮子，要自己造，google不会用Facebook的react而用自己的angular。为了把控自己业务，不被别人牵着走
+- 为了不流于平庸，大家都是写增删改查，你跟别人比有什么优势？如果能说一句【我公司的人都在用我写的UI框架】是不是很牛逼？造轮子会遇到很多技术层面而非业务层面的知识，比如一些算法。
+- 为了创造，你为别人做了这么久的事情，有没有为自己做过什么？证明有自驱动力。
+- 为什么是UI轮子,是风口，每个公司都需要UI框架，写到简历里面容易涨工资
+
+2. 为什么手机上的UI框架不好用?
+- 手机上交互少，手机上最复杂最常用的只有下拉更新
+
+3. React.FunctionComponent与IconProps
+- 装插件React develop tools
+- ts和react的第一个知识点，如何声明一个函数组件接受props
+```tsx
+import React from 'react';
+
+interface IconProps {
+  name: string;
+}
+
+const Icon: React.FunctionComponent<IconProps> = (props) => {
+  // Icon的类型是一个接受IconProps的函数组件FunctionComponent,<>表示类型接受一个参数P,如果不传参数的默认值就是一个空对象
+  // 空对象表示没有任何限制，当传了就有限制,p会传递到PropsWithChildren
+  // 最终的意思就是当我们写Function, 这个函数组件Props必须有name还可以有children,此时props的类型就是IconProps外加一个Children
+  return (
+    <span>{ props.name }</span>
+  )
+};
+
+export default Icon;
+```
