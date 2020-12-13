@@ -238,3 +238,56 @@ module.exports = Object.assign ({},base,{
 10. 配置TS类型生命文件
 - tsconfig.json加入`"outDir": "dist",`
 - 把index.d.ts移到dist/lib/index下面,在package.json加入`"types": "dist/lib/index",`
+
+11. 配置JEST,单元测试用
+- `yarn add --dev jest babel-jest @babel/preset-env @babel/preset-react react-test-renderer`
+
+12. 新建.babelrc
+```js
+{
+  "presets": [
+    "react-app"
+  ]
+}
+```
+- package.json增加test
+```
+  "scripts": {
+    "test": "cross-env NODE_ENV=test jest --config=jest.config.js --runInBand",
+    "start": "cross-env NODE_ENV=development webpack-dev-server --config webpack.config.dev.js",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js"
+  },
+```
+- 配置jest.config.js
+```js
+// https://jestjs.io/docs/en/configuration.html
+
+module.exports = {
+  verbose: true,
+  clearMocks: false,
+  collectCoverage: false,
+  reporters: ["default"],
+  moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
+  moduleDirectories: ['node_modules'],
+  moduleNameMapper: {
+    "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/__mocks__/file-mock.js",
+  },
+  testMatch: ['<rootDir>/**/__tests__/**/*.unit.(js|jsx|ts|tsx)'],
+  transform: {
+    "^.+unit\\.(js|jsx)$": "babel-jest",
+    '^.+\\.(ts|tsx)$': 'ts-jest',
+  },
+  setupFilesAfterEnv: ["<rootDir>test/setupTests.js"]
+}
+```
+- 安装`yarn add --dev ts-jest`
+- 创建setup/setupTests.js,等用到了在写
+- 测试一个button按钮, 发现问题，用了jest后要改成import * as React from 'react'这种形式
+- 修改tsconfig.json的配置，就可以用default open
+```
+    "strictNullChecks": true,
+    // "suppressImplicitAnyIndexErrors": true,
+    // https://github.com/Microsoft/TypeScript/issues/28762#issuecomment-443406607
+//    "allowSyntheticDefaultImports": true, // 已经被弃用, ts-js不支持
+    "esModuleInterop": true,
+```
