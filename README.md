@@ -332,12 +332,12 @@ declare module '*.svg' {
   export default content;
 }
 ```
-- tsconfig.json增加
+- tsconfig.json增加,表示这是源文件
 ```
 "include": [
     "types/**/*",
     "lib/**/*"
-  ],
+  ], 
 ```
 - icon.tsx
 ```
@@ -354,4 +354,67 @@ module: {
       },
     ]
   },
+```
+- `lib/**/*`,中的**,**表示任意的文件或者目录,而*只是表示文件,把types放到lib下include就只要写`lib/**/*`
+- 实现功能主要代码,根据name展示不一样的代码
+```ts
+import React from 'react';
+import wechat from '../icons/wechat.svg'
+console.log(wechat);
+interface IconProps {
+  name: string;
+}
+
+const Icon: React.FunctionComponent<IconProps> = (props) => {
+  return (
+    <span>
+      { props.name }
+      <svg>
+        <use xlinkHref={`#${props.name}`} />
+      </svg>
+    </span>
+  )
+};
+
+export default Icon;
+```
+- 总结:第一件事情+loader,loader会把所有svg放到页面最上面，第二步把所有svg的的源放到icons下面,第三步在icons中下面引入svg，第四部写个svg然后use这个icon，加上id
+5. declare module这段代码的作用
+```
+// 是针对import 'wechat' from 'wechat.svg' 这种情况，如果不写会出问题,因为没有export,写了就表示所有svg都有content:any并且为默认导出
+declare module '*.svg' {
+  const content: any;
+  export default content;
+}
+```
+6. importAll 实现一下子导入任意多个svg
+- importIcons.js
+```js
+let importAll = (requireContext) => requireContext.keys().forEach(requireContext)
+try {
+  importAll(require.context('./icons/'), true, /\.svg$/)
+} catch (error) {
+  console.log(error)
+}
+```
+- 然后在Icon组件中使用
+```tsx
+import React from 'react';
+import './importIcons.js'
+interface IconProps {
+  name: string;
+}
+
+const Icon: React.FunctionComponent<IconProps> = (props) => {
+  return (
+    <span>
+      { props.name }
+      <svg>
+        <use xlinkHref={`#${props.name}`} />
+      </svg>
+    </span>
+  )
+};
+
+export default Icon;
 ```
