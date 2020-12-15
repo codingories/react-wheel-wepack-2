@@ -323,3 +323,35 @@ const Icon: React.FunctionComponent<IconProps> = (props) => {
 
 export default Icon;
 ```
+
+4. 使用并配置svg-sprite-loader
+- 新建types/custom.d.ts
+```ts
+declare module '*.svg' {
+  const content: any;
+  export default content;
+}
+```
+- tsconfig.json增加
+```
+"include": [
+    "types/**/*",
+    "lib/**/*"
+  ],
+```
+- icon.tsx
+```
+import wechat from '../icons/wechart.svg'
+console.log(wechat);
+```
+- webpack.config.js
+```
+module: {
+    rules: [
+      {
+        test: /\.svg$/,
+        loader: 'svg-sprite-loader'
+      },
+    ]
+  },
+```
