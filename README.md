@@ -332,7 +332,7 @@ declare module '*.svg' {
   export default content;
 }
 ```
-- tsconfig.json增加,表示这是源文件
+- tsconfig.json增加,表示这是源文件,include表示ts需要分析哪些文件
 ```
 "include": [
     "types/**/*",
@@ -417,4 +417,10 @@ const Icon: React.FunctionComponent<IconProps> = (props) => {
 };
 
 export default Icon;
+```
+- treeShaking
+```
+import wechart from './icons'一个个引入好还是直接import all好
+import wechart from './icons'这种叫做静态函数，import all是非静态加载
+右边方便，左边方便treeshaking，tressShaking的基础是静态引入，import all虽然方便但是后续不能treeShaking
 ```
