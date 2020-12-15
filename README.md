@@ -424,3 +424,25 @@ import wechart from './icons'一个个引入好还是直接import all好
 import wechart from './icons'这种叫做静态函数，import all是非静态加载
 右边方便，左边方便treeshaking，tressShaking的基础是静态引入，import all虽然方便但是后续不能treeShaking
 ```
+四. 组件1-icon下
+- 配置 SCSS loader
+    - Unexpected token (1:0)错误，理解为不认识的字符串,token理解为string字符串
+    - 对webpack.config.js进行配置
+```
+module: {
+    rules: [
+      {
+        test: /\.scss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
+      }
+    ]
+  }
+```
+- 从右往左进行理解,'sass-loader'把icon.scss编程icon.css但是不是生成文件只是编程字符串翻译到内存，那么css-loader可以就可以将之后的结果变成对象，对面里面有字符串，style-loader是把整个对象变成style标签,具体伪代码如下,面试要说出来
+- 一个loader只做一件事情，所以有时候需要很多loader去配合去完成一件事
+```
+document.createElement('style')
+innerHTML = 'css'
+document.head.append(style)
+```
+- 安装`yarn add --dev sass-loader css-loader style-loader` 以及特殊的安装node-sass方法`yarn add node-sass@npm:dart-sass `
