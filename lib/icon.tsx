@@ -1,17 +1,17 @@
 import React from 'react';
 import './importIcons.js'
 import './icon.scss'
+import classes from './helpers/classes'
 
-interface IconProps {
+interface IconProps extends React.SVGAttributes<SVGElement>{
   name: string;
-  // onClick: (e:React.MouseEvent) => void;
-  onClick: React.MouseEventHandler<SVGElement>
-  // onClick表示是svg元素鼠标事件的处理函数
 }
 
 const Icon: React.FunctionComponent<IconProps> = (props) => {
+  const {className, ...restProps} = props; // 剩余操作符
   return (
-      <svg className="zui-icon" onClick={props.onClick}>
+      <svg className={classes('zui-icon',className)}
+        {...restProps}>
         <use xlinkHref={`#${props.name}`} />
       </svg>
   )

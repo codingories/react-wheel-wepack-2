@@ -543,3 +543,82 @@ ReactDOM.render(
   </div>, document.querySelector('#root'));
 ```
 3. 让Icon响应所有事件，利用react内置的DOM attributes接口
+- 如果让一个元素完全像svg元素或者html，元素第一步类型继承
+```js
+interface IconProps extends React.SVGAttributes<SVGElement>{
+  name: string; // 增加的
+}
+```
+- 然后要用展开符把props放到属性后面
+```
+import React from 'react';
+import './importIcons.js'
+import './icon.scss'
+
+interface IconProps extends React.SVGAttributes<SVGElement>{
+  name: string;
+}
+
+const Icon: React.FunctionComponent<IconProps> = (props) => {
+  return (
+      <svg className="zui-icon"
+        {...props}>
+        <use xlinkHref={`#${props.name}`} />
+      </svg>
+  )
+};
+
+export default Icon;
+```
+
+4. 自己写classes函数解决外部class覆盖内部的的问题，vue会自己合并，react自己解决
+- 解决方式一,icon.tsx
+```tsx
+import React from 'react';
+import './importIcons.js'
+import './icon.scss'
+
+interface IconProps extends React.SVGAttributes<SVGElement>{
+  name: string;
+}
+
+const Icon: React.FunctionComponent<IconProps> = (props) => {
+  const {className, ...restProps} = props;
+  return (
+      <svg className={`zui-icon ${className}`}
+        {...restProps}>
+        <use xlinkHref={`#${props.name}`} />
+      </svg>
+  )
+};
+
+export default Icon;
+```
+- index.tsx
+```
+import ReactDOM from 'react-dom'
+import React from 'react'
+import Icon from './icon'
+const fn: React.MouseEventHandler = (e)=>{
+  console.log(e.target);// target可能没有属性,MouseEvent接受参数, 断言
+};
+
+ReactDOM.render(
+  <div>
+    <Icon name="QQ" className='qqqq' onClick={fn}
+          onMouseEnter={() => console.log('enter')}
+          onMouseLeave={() => console.log('leave')}
+    />
+  </div>, document.querySelector('#root'));
+
+```
+
+- 如果没传会出现undefined,有一个库叫classnames，解决了这个问题
+  - helpers/classes.tsx
+```
+function classes(...names:(string|undefined)[]) {
+  return names.filter(Boolean).join(' ')
+}
+
+export default classes;
+```
