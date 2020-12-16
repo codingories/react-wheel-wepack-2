@@ -1,8 +1,8 @@
 import ReactDOM from 'react-dom'
 import React from 'react'
 import Icon from './icon'
-const fn = ()=>{
-  console.log('fn')
+const fn: React.MouseEventHandler = (e)=>{
+  console.log(e.target);// target可能没有属性,MouseEvent接受参数, 断言
 };
 
 ReactDOM.render(

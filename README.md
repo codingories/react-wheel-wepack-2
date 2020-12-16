@@ -474,4 +474,72 @@ export default Icon;
   height: 1.4em;
 }
 ```
-2. 给icon组件增加click事件
+2. 给icon组件增加click事件，svg点击事件初步实现
+- icon.tsx
+```
+import React from 'react';
+import './importIcons.js'
+import './icon.scss'
+
+interface IconProps {
+  name: string;
+  onClick: () => void;
+
+  // onClick: React.MouseEventHandler<SVGElement>
+  // onClick表示是svg元素鼠标事件的处理函数
+}
+
+const Icon: React.FunctionComponent<IconProps> = (props) => {
+  return (
+      <svg className="zui-icon" onClick={props.onClick}>
+        <use xlinkHref={`#${props.name}`} />
+      </svg>
+  )
+};
+
+export default Icon;
+```
+- index.tsx
+```
+import ReactDOM from 'react-dom'
+import React from 'react'
+import Icon from './icon'
+const fn = ()=>{
+  console.log('fn')
+};
+
+ReactDOM.render(
+  <div>
+    <Icon name="QQ" onClick={fn} />
+  </div>, document.querySelector('#root'));
+```
+- 如何声明e的类型,完善e的类型
+- index.tsx
+```
+import ReactDOM from 'react-dom'
+import React from 'react'
+import Icon from './icon'
+const fn: React.MouseEventHandler = (e)=>{
+  console.log(e.target);// target可能没有属性,MouseEvent接受参数, 断言
+};
+
+ReactDOM.render(
+  <div>
+    <Icon name="QQ" onClick={fn} />
+  </div>, document.querySelector('#root'));
+```
+- icon.tsx
+```
+import ReactDOM from 'react-dom'
+import React from 'react'
+import Icon from './icon'
+const fn: React.MouseEventHandler = (e)=>{
+  console.log(e.target);// target可能没有属性,MouseEvent接受参数, 断言
+};
+
+ReactDOM.render(
+  <div>
+    <Icon name="QQ" onClick={fn} />
+  </div>, document.querySelector('#root'));
+```
+3. 让Icon响应所有事件，利用react内置的DOM attributes接口

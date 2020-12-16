@@ -4,9 +4,8 @@ import './icon.scss'
 
 interface IconProps {
   name: string;
-  onClick: () => void;
-
-  // onClick: React.MouseEventHandler<SVGElement>
+  // onClick: (e:React.MouseEvent) => void;
+  onClick: React.MouseEventHandler<SVGElement>
   // onClick表示是svg元素鼠标事件的处理函数
 }
 
