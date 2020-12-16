@@ -425,6 +425,7 @@ import wechart from './icons'这种叫做静态函数，import all是非静态�
 右边方便，左边方便treeshaking，tressShaking的基础是静态引入，import all虽然方便但是后续不能treeShaking
 ```
 四. 组件1-icon下
+1. 给icon组件增加样式
 - 配置 SCSS loader
     - Unexpected token (1:0)错误，理解为不认识的字符串,token理解为string字符串
     - 对webpack.config.js进行配置
@@ -446,3 +447,31 @@ innerHTML = 'css'
 document.head.append(style)
 ```
 - 安装`yarn add --dev sass-loader css-loader style-loader` 以及特殊的安装node-sass方法`yarn add node-sass@npm:dart-sass `
+- 添加css代码
+```tsx
+import React from 'react';
+import './importIcons.js'
+import './icon.scss'
+
+interface IconProps {
+  name: string;
+}
+
+const Icon: React.FunctionComponent<IconProps> = (props) => {
+  return (
+      <svg className="zui-icon">
+        <use xlinkHref={`#${props.name}`} />
+      </svg>
+  )
+};
+
+export default Icon;
+```
+- icon.scss
+```css
+.zui-icon {
+  width: 1.4em;
+  height: 1.4em;
+}
+```
+2. 给icon组件增加click事件
