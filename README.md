@@ -645,3 +645,97 @@ const Icon: React.FunctionComponent<IconProps> = (props) => {
 
 export default Icon;
 ```
+- 进一步用解构的方式优化代码
+```ts
+import React from 'react';
+import './importIcons.js'
+import './icon.scss'
+import classes from './helpers/classes'
+
+interface IconProps extends React.SVGAttributes<SVGElement>{
+  name: string;
+}
+
+const Icon: React.FunctionComponent<IconProps> = ({className, name, ...restProps}) => {
+  return (
+      <svg className={classes('zui-icon', className)}
+        {...restProps}>
+        <use xlinkHref={`#${name}`} />
+      </svg>
+  )
+};
+
+export default Icon;
+
+```
+- react的计算属性
+```jsx
+
+static defaultProps = {
+  message: 'default message'
+};
+
+constructor(props){
+  super(props);
+  this.state = {
+    n: 1,
+    firstName : 'aaa',
+    lastName : 'bbb'
+  }
+}
+
+get name(){
+  return this.state.firstName + this.state.firstName 
+}
+set name(newName){
+  const [firstName, lastName] = newName.split(" ")
+  this.setState({
+    firstName,
+    lastName
+  }) // 搞个input就可以
+}
+componentDidMount()
+render(){
+  return {
+    <div>{this.name}</div>
+  }
+}
+ReactDOM.render(<App />)
+
+interface props{
+  message?: string
+}
+
+```
+- 函数组件一般写法
+```tsx
+import PropTypes from 'prop-types'
+const App: React.FunctionComponent<Props> = (props)=> {
+  const [n, setN] = useState(1) // 函数组件用state
+  const x = ()=>{
+    setN(n+1)
+  }
+  useEffect(()=>{
+    console.log('UI更新之后, mounted或者updated')
+  }) // 在每次ui更新之后执行
+
+  useEffect(()=>{
+    console.log('UI更新之后, mounted或者updated')
+  }, [n]) // 这里表示n变化了之后变化n为依赖,删完[]只在第一次执行就是mounted,和unmount，最常用就是在[]的地方ajax操作
+  props.message!.split(' ') // ！表示强制为空
+  return (
+    <div onClick = {x}>{props.message}</div> // 函数组件用props
+  )
+}
+
+App.defaultProps = {
+  message: 'getDefaultMessage'
+}
+
+React.render(<App message = 'hi function'/>, rootElement)
+App.protoTypes = {
+  message: PropTypes.number,
+} // 函数组件检查js类型
+```
+- 总共要七个:useState, useEffect,useContext组件通信,userReducer是代替redux的方案,useRef代替类里面的Ref,useCallback,useMemo
+- 函数式的本质式不能第二次赋值，无状态，函数的好处是可以用数学知识，类的好处是适合人类
